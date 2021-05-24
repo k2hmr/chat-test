@@ -1,12 +1,15 @@
-//import express from "express";
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server); //追加
 
-const app = require('express')();
-
-app.get('/', (req, res) =>{
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+io.on('connection', function(socket){
+  console.log('a user connected');　//追加
+});
+
+server.listen(3000, function(){
+  console.log('listening on *:3000');
 });
