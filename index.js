@@ -3,7 +3,7 @@
 const app = require('express')();
 
 app.get('/', (req, res) =>{
-  res.send('<h1>Hello world</h1>');
+  res.sendFile(__dirname + '/index.html');
 });
 
 const port = process.env.PORT || 3000;
