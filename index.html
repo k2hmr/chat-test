@@ -14,15 +14,36 @@
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="app">
+      <ul id="messages">
+        <li v-for="message in messages">{{ message }}</li>
+      </ul>
+      <form action="">
+        <input id="m" autocomplete="off" v-model="textInput"/>
+        <button v-on:click.prevent="sendMessage">Send</button>
+      </form>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
       const socket = io('http://localhost:3000');
-      socket.on('connect', () => {
-        console.log(socket.connected); // true
+      const app = new Vue({
+        el: '#app',
+        data: {
+          textInput: '',
+          messages: [],
+        },
+        methods: {
+          sendMessage(){
+            socket.emit('chat message', this.textInput);
+            this.textInput = '';
+          }
+        },
+        mounted(){
+          socket.on('chat message', (msg) =>{
+            this.messages.push(msg);
+          });
+        }
       });
     </script>
   </body>

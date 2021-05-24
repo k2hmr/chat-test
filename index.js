@@ -6,10 +6,17 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
-  console.log('a user connected');　//追加
+io.on('connection', (socket)=>{
+  socket.emit('chat message','ようそこチャットアプリへ');
+  socket.broadcast.emit('chat message','新しいユーザが接続しました。')
+  socket.on('disconnect',function(){
+    io.emit('chat message','あるユーザの接続が切れました')
+  })
+  socket.on('chat message', (msg) =>{
+    io.emit('chat message', msg);
+  });
 });
 
-server.listen(3000, function(){
+server.listen(3000, () => {
   console.log('listening on *:3000');
 });
